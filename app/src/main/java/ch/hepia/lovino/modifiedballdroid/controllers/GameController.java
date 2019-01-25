@@ -45,8 +45,6 @@ public class GameController {
     private DifficultyLevel difficulty;
     private GameSurfaceView view;
     private float xAccel = 0;
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
     private Game game;
     private Ball ball;
     private Score score;
@@ -73,11 +71,7 @@ public class GameController {
         this.context = context;
         this.difficulty = difficulty;
         this.view = new GameSurfaceView(context, this);
-        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager != null) {
-            this.accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        }
         this.bonusesToRemove = new ArrayList<>();
         this.timer = new TimerThread(10 * 1000, this);
 
@@ -284,7 +278,6 @@ public class GameController {
     }
 
     public void pauseGame() {
-        this.sensorManager.unregisterListener(this.sensorListener, this.accelerometer);
         paused = true;
         this.timer.stopTimer();
         try {
