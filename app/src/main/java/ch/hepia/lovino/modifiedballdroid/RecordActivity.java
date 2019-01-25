@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -118,9 +119,18 @@ public class RecordActivity extends Activity {
             });
             pubnub.subscribe().channels(Arrays.asList(channelName)).execute();
 
-            while(recorder.getRecordingState() == RECORDSTATE_RECORDING){
-                updateOnVoice();
-            }
+            AsyncTask task = new AsyncTask() {
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    while(recorder.getRecordingState() == RECORDSTATE_RECORDING){
+                        updateOnVoice();
+                    }
+                    return null;
+                }
+            };
+            task.execute();
+
+
         });
 
         stopButton.setOnClickListener(new View.OnClickListener() {
